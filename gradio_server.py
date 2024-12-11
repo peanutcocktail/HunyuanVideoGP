@@ -32,7 +32,7 @@ args.flow_reverse = True
 hunyuan_video_sampler = HunyuanVideoSampler.from_pretrained(models_root_path, args=args, device="cpu")
 from mmgp import offload 
 pipe = hunyuan_video_sampler.pipeline
-offload.all(pipe)
+offload.all(pipe, pinInRAM=False)
 
 def generate_video(
     prompt,
@@ -157,7 +157,5 @@ def create_demo(model_path, save_path):
 
 if __name__ == "__main__":
     os.environ["GRADIO_ANALYTICS_ENABLED"] = "False"
-    server_name = os.getenv("SERVER_NAME", "0.0.0.0")
-    server_port = int(os.getenv("SERVER_PORT", "7860"))
     demo = create_demo(args.model_base, args.save_path)
-    demo.launch(server_name=server_name, server_port=server_port)
+    demo.launch()
